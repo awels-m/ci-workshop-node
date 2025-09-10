@@ -1,0 +1,13 @@
+{
+  "name": "ci-workshop-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --ci",
+    "build": "echo \"Build step placeholder\" && exit 0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
