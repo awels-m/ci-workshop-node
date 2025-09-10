@@ -1,0 +1,16 @@
+name: Node Setup and Install
+description: "Set up Node and install dependencies with caching"
+inputs:
+  node-version:
+    description: "Node version to use"
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "npm"
+    - run: npm ci
+      shell: bash
