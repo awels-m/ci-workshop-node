@@ -1,0 +1,38 @@
+name: Reusable Node CI
+
+# This makes the workflow callable by other workflows
+on:
+  workflow_call:
+    inputs:
+      node:
+        description: "Node.js version to use"
+        required: true
+        type: string
+    # (Optional) If you want callers to pass secrets explicitly, list them here:
+    # secrets:
+    #   NPM_TOKEN:
+    #     required: false
+
+permissions:
+  contents: read   # least privilege by default
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out caller repository
+        uses: actions/checkout@v4
+        # This fetches the CALLER repo's code automatically
+
+      # Reuse the composite action we created in step 2
+      - name: Node setup (composite)
+        uses: ./.github/actions/node-setup
+        with:
+          node-version: ${{ inputs.node }}
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
