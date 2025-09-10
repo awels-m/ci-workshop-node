@@ -1,4 +1,5 @@
 name: Build and Test Node.js Application
+
 on:
   push:
     branches: [ "main" ]       # run on any push to main
