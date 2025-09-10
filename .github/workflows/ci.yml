@@ -6,33 +6,29 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# optional but good practice
-permissions:
-  contents: read
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
+      # 1) Get the repo contents
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # 2) Install Node and enable npm caching for speed
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
+      # 3) Install exactly what's in package-lock for reproducibility
       - name: Install dependencies
         run: npm ci
-        # Using npm ci for reproducible, faster installs with package-lock.json
 
+      # 4) Run tests; CI fails automatically if tests fail
       - name: Run tests
         run: npm test
 
+      # 5) Build the project
       - name: Build
         run: npm run build
