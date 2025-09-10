@@ -1,4 +1,4 @@
-name: Build and Test Node.js Application
+name: CI (Caller)
 
 on:
   push:
@@ -9,24 +9,16 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+  call-ci:
+    # Reference the reusable workflow by owner/repo/path@ref
+    uses: awels-m/ci-workshop-node/.github/workflows/reusable-ci.yml@v1
+    with:
+      node: "20"
 
-      - name: Node setup (composite)
-        uses: ./.github/actions/node-setup
-        with:
-          node-version: "20"
+    # Option 1: pass all repo/environment secrets to the reusable workflow
+    secrets: inherit
 
-      - name: Run tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
+    # Option 2: pass specific secrets (only if you declared them in the reusable file)
+    # secrets:
+    #   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
