@@ -8,26 +8,37 @@ on:
         description: "Node.js version to use"
         required: true
         type: string
-    # (Optional) If you want callers to pass secrets explicitly, list them here:
+    # If you ever want callers to pass secrets explicitly, you can declare them here:
     # secrets:
     #   NPM_TOKEN:
     #     required: false
 
+# Least privilege by default
 permissions:
-  contents: read   # least privilege by default
+  contents: read
 
 jobs:
   build:
+    # ⬅ REQUIRED: which VM image to run on
+    runs-on: ubuntu-latest
+
+    # Optional: run multiple Node versions in parallel
     strategy:
       fail-fast: false
       matrix:
         node: [18, 20]  # test multiple versions in parallel
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out caller repository
+        uses: actions/checkout@v4
+
       - name: Node setup (composite)
         uses: ./.github/actions/node-setup
         with:
-          node-version: ${{ matrix.node }}
-      - run: npm test
-      - run: npm run build
+          node-version: ${{ matrix.node }}   # uses matrix value
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
