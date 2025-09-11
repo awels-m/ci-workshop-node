@@ -18,21 +18,16 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]  # test multiple versions in parallel
 
     steps:
-      - name: Check out caller repository
-        uses: actions/checkout@v4
-        # This fetches the CALLER repo's code automatically
-
-      # Reuse the composite action we created in step 2
+      - uses: actions/checkout@v4
       - name: Node setup (composite)
         uses: ./.github/actions/node-setup
         with:
-          node-version: ${{ inputs.node }}
-
-      - name: Run tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - run: npm run build
