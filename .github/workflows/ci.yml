@@ -11,14 +11,7 @@ permissions:
 
 jobs:
   call-ci:
-    # Reference the reusable workflow by owner/repo/path@ref
-    uses: awels-m/ci-workshop-node/.github/workflows/reusable-ci.yml@v1
+    uses: awels-m/ci-workshop-node/.github/workflows/reusable-ci.yml@v1.2
     with:
       node: "20"
-
-    # Option 1: pass all repo/environment secrets to the reusable workflow
     secrets: inherit
-
-    # Option 2: pass specific secrets (only if you declared them in the reusable file)
-    # secrets:
-    #   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
