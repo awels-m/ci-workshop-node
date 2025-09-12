@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# ↓↓↓ This is the part you asked about ↓↓↓
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   call-ci:
     uses: awels-m/ci-workshop-node/.github/workflows/reusable-ci.yml@v1.2
