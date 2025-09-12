@@ -11,7 +11,7 @@ permissions:
 
 # ↓↓↓ This is the part you asked about ↓↓↓
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
