@@ -1,0 +1,40 @@
+name: Release (Publish to npm)
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # e.g., v1.0.0, v1.4.2
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Node setup (composite)
+        uses: ./.github/actions/node-setup
+        with:
+          node-version: "20"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify npm auth
+        run: npm whoami
+
+      # Optional, but a good practice to be sure tests pass in release too
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # If your package is scoped and this is the first publish, keep --access public.
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
