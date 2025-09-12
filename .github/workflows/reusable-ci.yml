@@ -1,6 +1,5 @@
 name: Reusable Node CI
 
-# This makes the workflow callable by other workflows
 on:
   workflow_call:
     inputs:
@@ -8,25 +7,17 @@ on:
         description: "Node.js version to use"
         required: true
         type: string
-    # If you ever want callers to pass secrets explicitly, you can declare them here:
-    # secrets:
-    #   NPM_TOKEN:
-    #     required: false
 
-# Least privilege by default
 permissions:
   contents: read
 
 jobs:
   build:
-    # ⬅ REQUIRED: which VM image to run on
     runs-on: ubuntu-latest
-
-    # Optional: run multiple Node versions in parallel
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 20]  # test multiple versions in parallel
+        node: [18, 20]
 
     steps:
       - name: Check out caller repository
@@ -35,10 +26,11 @@ jobs:
       - name: Node setup (composite)
         uses: ./.github/actions/node-setup
         with:
-          node-version: ${{ matrix.node }}   # uses matrix value
+          node-version: ${{ matrix.node }}
 
       - name: Run tests
         run: npm test
 
       - name: Build
         run: npm run build
+
